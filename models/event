@@ -1,0 +1,19 @@
+var http = require('http'); 
+var credentials = require("../lib/credentials");
+
+exports.getEvents = function( callback) {
+    var url = 'http://api.meetup.com/self/calendar?key=' + credentials.meetup.apiKey;
+    return http.get(url, function(response) {
+
+        // Continuously update stream with data
+        var events_data = '';
+        response.on('data', function(d) {
+            events_data += d;
+        });
+        var err; // placeholder for error handling
+        response.on('end', function() {
+            callback(err, JSON.parse(events_data));
+        });
+    }).end();
+    
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Shadow Pipe</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  </head>
+
+<script>
+
+    var eventsApp = angular.module('eventsApp',[]);
+    eventsApp.controller('EventsController', function($scope, $http) {
+      
+    $http.get('/api/events')
+      .then(function successCallback(response) {
+            $scope.events = response.data;
+      }, function errorCallback(response) {
+        console.log('Error: ' + response.data);
+      });
+
+  });
+
+ </script>
+
+<body ng-app="eventsApp">
+      <header>Meetup Events</header>
+
+<div ng-controller="EventsController" class="container-fluid">
+  <div class="row">
+    <div class="sidebar col-sm-4">
+     	<p>Search : <input type="text" ng-model="search_term"></p>
+     	<table>
+     	    <tr>
+     	        <th>Date</th>
+     	        <th>Name</th>
+     	        <th>Group</th>
+     	    </tr>
+          <tr ng-repeat="event in events | orderBy : 'time' | filter: search_term">
+            <td>{{ event.time }}</td>
+            <td><a ng-click="showDetail(event)">{{ event.name }}</a></td>
+            <td>{{ event.group.name }}</td>
+          </tr>
+        </table>
+                  <hr>
+    </div>
+  </div><!--end row-->
+
+	<div class="nav">
+    	<footer>&copy; Brisk Software LLC</footer
+	</div><!-- end container-fluid-->
+
+</body>
+</html>
